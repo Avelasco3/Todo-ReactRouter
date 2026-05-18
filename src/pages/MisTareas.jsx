@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-const MisTareas = () => {
+const MisTareas = ({ tasks = [], onAgregar, onEliminar, onToggle }) => {
     const [newTask, setNewTask] = useState("");
     const [fecha, setFecha] = useState("");
     const [categoria, setCategoria] = useState("");
     const [urgencia, setUrgencia] = useState("");
-    const [tasks, setTasks] = useState([]);
     const [activeTab, setActiveTab] = useState("todas");
     const [filtroCategoria, setFiltroCategoria] = useState("");
     const [filtroUrgencia, setFiltroUrgencia] = useState("");
@@ -34,21 +33,11 @@ const MisTareas = () => {
             urgencia,
             completada: false,
         };
-        setTasks([...tasks, tarea]);
+        onAgregar(tarea);
         setNewTask("");
         setFecha("");
         setCategoria("");
         setUrgencia("");
-    };
-
-    const eliminarTarea = (id) => {
-        setTasks(tasks.filter((t) => t.id !== id));
-    };
-
-    const toggleCompletada = (id) => {
-        setTasks(tasks.map((t) =>
-            t.id === id ? { ...t, completada: !t.completada } : t
-        ));
     };
 
     const tareasFiltradas = tasks.filter((t) => {
@@ -104,9 +93,8 @@ const MisTareas = () => {
                 opacity: tarea.completada ? 0.4 : 1,
             }}
         >
-            {/* Checkbox */}
             <div
-                onClick={() => toggleCompletada(tarea.id)}
+                onClick={() => onToggle(tarea.id)}
                 style={{
                     width: "16px",
                     height: "16px",
@@ -125,7 +113,6 @@ const MisTareas = () => {
                 {tarea.completada && "✓"}
             </div>
 
-            {/* Info */}
             <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                     fontSize: "12px",
@@ -161,9 +148,8 @@ const MisTareas = () => {
                 </div>
             </div>
 
-            {/* Eliminar */}
             <button
-                onClick={() => eliminarTarea(tarea.id)}
+                onClick={() => onEliminar(tarea.id)}
                 style={{
                     background: "none",
                     border: "none",
@@ -319,7 +305,7 @@ const MisTareas = () => {
                 <button style={pillStyle(filtroFecha === "semana")} onClick={() => setFiltroFecha(filtroFecha === "semana" ? "" : "semana")}>Esta semana</button>
             </div>
 
-            {/* Lista pendientes */}
+            {/* Pendientes */}
             {(activeTab === "todas" || activeTab === "pendientes") && (
                 <>
                     <div style={{ fontSize: "10px", color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.07em", margin: "10px 0 7px" }}>
@@ -334,7 +320,7 @@ const MisTareas = () => {
                 </>
             )}
 
-            {/* Lista completadas */}
+            {/* Completadas */}
             {(activeTab === "todas" || activeTab === "completadas") && (
                 <>
                     <div style={{ fontSize: "10px", color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.07em", margin: "14px 0 7px" }}>
