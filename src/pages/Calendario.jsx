@@ -15,11 +15,9 @@ const Calendario = ({ tasks = [] }) => {
 
     const diasSemana = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
-    // Primer día del mes y total de días
     const primerDia = new Date(anio, mes, 1);
     const totalDias = new Date(anio, mes + 1, 0).getDate();
 
-    // Ajuste: lunes = 0
     let inicioSemana = primerDia.getDay() - 1;
     if (inicioSemana < 0) inicioSemana = 6;
 
@@ -32,9 +30,10 @@ const Calendario = ({ tasks = [] }) => {
         return `${anio}-${mm}-${dd}`;
     };
 
+    // Solo tareas pendientes — las completadas no aparecen en el calendario
     const tareasDelDia = (dia) => {
         const fechaStr = formatearFecha(dia);
-        return tasks.filter((t) => t.fecha === fechaStr);
+        return tasks.filter((t) => t.fecha === fechaStr && !t.completada);
     };
 
     const urgenciaColor = {
@@ -63,15 +62,12 @@ const Calendario = ({ tasks = [] }) => {
 
     const tareasDiaSeleccionado = diaSeleccionado ? tareasDelDia(diaSeleccionado) : [];
 
-    // Construir celdas del calendario
     const celdas = [];
 
-    // Celdas vacías del inicio
     for (let i = 0; i < inicioSemana; i++) {
         celdas.push(<div key={`vacio-${i}`} />);
     }
 
-    // Días del mes
     for (let dia = 1; dia <= totalDias; dia++) {
         const tareas = tareasDelDia(dia);
         const activo = esHoy(dia);
@@ -84,7 +80,7 @@ const Calendario = ({ tasks = [] }) => {
                 style={{
                     height: "50px",
                     background: seleccionado ? "var(--blue-subtle)" : "var(--bg-card)",
-                    border: `0.5px solid ${activo ? "var(--blue-primary)" : seleccionado ? "var(--blue-primary)" : "var(--border-subtle)"}`,
+                    border: `0.5px solid ${activo || seleccionado ? "var(--blue-primary)" : "var(--border-subtle)"}`,
                     borderRadius: "6px",
                     display: "flex",
                     flexDirection: "column",
@@ -102,7 +98,6 @@ const Calendario = ({ tasks = [] }) => {
                     {dia}
                 </span>
 
-                {/* Puntitos de urgencia */}
                 {tareas.length > 0 && (
                     <div style={{ display: "flex", gap: "2px", marginTop: "4px" }}>
                         {tareas.slice(0, 3).map((t, i) => (
@@ -217,7 +212,7 @@ const Calendario = ({ tasks = [] }) => {
             }}>
                 <div style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "12px" }}>
                     {diaSeleccionado
-                        ? `Tareas del ${diaSeleccionado} de ${nombresMes[mes]}`
+                        ? `Tareas pendientes del ${diaSeleccionado} de ${nombresMes[mes]}`
                         : "Selecciona un día para ver sus tareas"
                     }
                 </div>
