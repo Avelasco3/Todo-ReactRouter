@@ -5,22 +5,30 @@ const AndresVelasco = () => {
     const [tasks, setTasks] = useState([]);
 
     const onChange = (e) => {
-        //console.dir(e)
         setNewTask(e.target.value);
-    }
+    };
 
     const onClick = () => {
+        if (!newTask.trim()) return;
         const setNewTasks = [...tasks, newTask];
         setTasks(setNewTasks);
         setNewTask("");
-    }
+    };
 
-    return(
+    return (
         <div>
             <h1>¿Cual es tu nombre?</h1>
-            <input type="text" onChange={onChange} /><button onClick={onClick}>Guardar</button>
-            {tasks.map((task) => <p>{task}</p>)}
+            <input
+                type="text"
+                value={newTask}
+                onChange={onChange}
+            />
+            <button onClick={onClick}>Guardar</button>
+            {tasks.map((task, index) => (
+                <p key={index}>{task}</p>
+            ))}
         </div>
     );
 };
+
 export default AndresVelasco;
