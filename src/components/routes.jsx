@@ -1,16 +1,22 @@
-import Ejemplo from "../pages/ejemplo";
 import Home from "../pages/home";
-import Layout from "./Layout";
+import MisTareas from "../pages/MisTareas";
+import Calendario from "../pages/Calendario";
 
 export const childrenRouterList = [
     {
         index: true,
         Component: Home,
-        text: "Home"
+        text: "Inicio",
+        path: "/",
     },
     {
-        path: "login",
-        Component: Ejemplo,
-        text: "Ejemplo"
-    }
-]
+        path: "tareas",
+        Component: MisTareas,
+        text: "Mis tareas",
+    },
+    {
+        path: "calendario",
+        Component: Calendario,
+        text: "Calendario",
+    },
+];
